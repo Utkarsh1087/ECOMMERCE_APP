@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "cd vite-project && npm run dev",
-    "build": "cd vite-project && npm run build",
+    "build": "cd vite-project && npm install && npm run build",
     "server": "cd vite-project && npm run dev",
     "preview": "cd vite-project && npm run preview"
   },
