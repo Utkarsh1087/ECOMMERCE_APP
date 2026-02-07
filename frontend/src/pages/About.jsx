@@ -1,7 +1,7 @@
 import React from 'react'
 import Title from '../components/Title.jsx'
 import { assets } from '../assets/assets.js'
-import NewsletterBox from '../components/NewsletterBox.jsx'
+import NewsLetterBox from '../components/NewsLetterBox.jsx'
 
 const About = () => {
   return (
@@ -45,7 +45,7 @@ const About = () => {
         </div>
       </div>
 
-      <NewsletterBox />
+      <NewsLetterBox />
 
     </div>
   )
