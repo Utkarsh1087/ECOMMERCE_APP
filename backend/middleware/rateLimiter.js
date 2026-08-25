@@ -1,9 +1,9 @@
 import rateLimit from 'express-rate-limit';
 
-// General API rate limiter: 150 requests per 15 minutes per IP
+// General API rate limiter
 export const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 150,
+  max: parseInt(process.env.API_RATE_LIMIT_MAX || '2000', 10),
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -12,10 +12,10 @@ export const apiLimiter = rateLimit({
   }
 });
 
-// Strict rate limiter for Authentication endpoints: 15 requests per 15 minutes per IP
+// Strict rate limiter for Authentication endpoints
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 15,
+  max: parseInt(process.env.AUTH_RATE_LIMIT_MAX || '500', 10),
   standardHeaders: true,
   legacyHeaders: false,
   message: {

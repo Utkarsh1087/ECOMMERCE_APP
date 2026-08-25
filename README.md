@@ -174,33 +174,57 @@ VITE_BACKEND_URL="http://localhost:4000"
 
 ---
 
+### 🔑 Setting Up Admin Account & Password
+
+The Admin Dashboard does not use self-registration; instead, the administrator account is securely configured via environment variables in the backend:
+
+1. Open `backend/.env` (or set in your hosting platform environment variables):
+   ```env
+   ADMIN_EMAIL="admin@forever.com"
+   ADMIN_PASSWORD="YourStrongAdminPassword123"
+   ```
+2. **Customizing Credentials**:
+   - Replace `admin@forever.com` with your preferred administrative email.
+   - Replace `YourStrongAdminPassword123` with a strong, secret password.
+3. **Logging in to Admin Panel**:
+   - Start the servers (see Step 4).
+   - Navigate to the Admin Dashboard at **http://localhost:5174**.
+   - Enter the exact `ADMIN_EMAIL` and `ADMIN_PASSWORD` you configured in `backend/.env`.
+   - The backend validates these credentials and generates an authenticated Admin JWT session.
+
+---
+
 ### 4. Install Dependencies & Run
 
-Open **three separate terminal windows** (or tabs) to run each service:
+You can install all dependencies across Backend, Frontend, and Admin at once from the root directory:
+
+```bash
+# From the root directory:
+npm run install:all
+```
+
+Then open **three separate terminal windows** (or tabs) to start each service:
 
 #### 🟢 Terminal 1: Backend API
 ```bash
-cd backend
-npm install
-npm run dev
+npm run backend
+# (or: cd backend && npm run dev)
 ```
 > Server will start at **http://localhost:4000** and log `MongoDB connected`.
 
 #### 🔵 Terminal 2: Customer Storefront
 ```bash
-cd frontend
-npm install
-npm run dev
+npm run frontend
+# (or: cd frontend && npm run dev)
 ```
-> Storefront will start at **http://localhost:5173** (or next available port).
+> Storefront will start at **http://localhost:5173**.
 
 #### 🟣 Terminal 3: Admin Dashboard
 ```bash
-cd admin/vite-project
-npm install
-npm run dev
+npm run admin
+# (or: cd admin/vite-project && npm run dev)
 ```
-> Admin panel will start at **http://localhost:5174** (or next available port).
+> Admin panel will start at **http://localhost:5174**.
 
 ---
 
@@ -230,24 +254,10 @@ npm run dev
 
 ---
 
-## ☕ Developer Corner & Jokes
-
-Why did you scroll all the way down here? For the code? Or for the developer humor? Here are a few to brighten your git commits:
+## ☕ Developer Joke
 
 > **Why do programmers prefer dark mode?**  
 > *Because light attracts bugs.* 🐛💡
-
-> **There are only 10 types of people in the world:**  
-> *Those who understand binary, and those who don't.* 🤖
-
-> **A SQL query walks into a bar, walks up to two tables and asks:**  
-> *"Can I join you?"* 🍻
-
-> **Why was the JavaScript developer sad?**  
-> *Because they didn't Node how to Express themselves.* 💔
-
-> **Why did the developer go broke?**  
-> *Because they used up all their cache.* 💸
 
 ---
 

@@ -1,0 +1,12 @@
+{
+  "name": "forever-ecommerce-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Forever E-Commerce Platform - Full Stack MERN Application",
+  "scripts": {
+    "install:all": "npm --prefix backend install && npm --prefix frontend install && npm --prefix admin/vite-project install",
+    "backend": "npm --prefix backend run dev",
+    "frontend": "npm --prefix frontend run dev",
+    "admin": "npm --prefix admin/vite-project run dev"
+  }
+}

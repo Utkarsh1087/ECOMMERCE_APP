@@ -1,24 +1,13 @@
 {
   "name": "admin",
   "version": "1.0.0",
-  "description": "",
+  "description": "Admin Panel Wrapper",
   "type": "module",
   "scripts": {
     "dev": "cd vite-project && npm run dev",
-    "build": "cd vite-project && npm install && npm run build",
+    "build": "cd vite-project && npm run build",
     "server": "cd vite-project && npm run dev",
-    "preview": "cd vite-project && npm run preview"
-  },
-  "dependencies": {
-    "@tailwindcss/vite": "^4.1.18",
-    "axios": "^1.13.4",
-    "react-router-dom": "^7.13.0",
-    "react-toastify": "^11.0.5"
-  },
-  "devDependencies": {
-
-    "autoprefixer": "^10.4.23",
-    
-    "tailwindcss": "^4.1.18"
+    "preview": "cd vite-project && npm run preview",
+    "postinstall": "cd vite-project && npm install"
   }
 }
