@@ -3,95 +3,107 @@ import validator from 'validator';
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 
-
 const createToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET)
-}
-//route for user login
+    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+};
 
+// Route for user login
 const loginUser = async (req, res) => {
-try {
-const { email,password} = req.body;
-const user = await userModel.findOne({email});
-if (!user){
-    return res.json({success:false,message:"User doesn't exists"})
+    try {
+        const { email, password } = req.body;
 
-}
-const isMatch = await bcrypt.compare(password,user.password)
-if (isMatch){
-    const token = createToken(user.id)
-    res.json({success:true,token})
-}
-else{
-   res.json({success:false,message:'Invalid credentials'}) 
-}
-}catch(error){ 
-    console.log(error);
-    res.json({success:false,message:error.message})
-}
-}
+        if (!email || !password) {
+            return res.status(400).json({ success: false, message: "Email and password are required" });
+        }
 
-//route for user registration
+        const normalizedEmail = validator.normalizeEmail(email);
+        const user = await userModel.findOne({ email: normalizedEmail });
 
+        if (!user) {
+            return res.status(401).json({ success: false, message: "Invalid email or password" });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (isMatch) {
+            const token = createToken(user._id);
+            return res.json({ success: true, token });
+        } else {
+            return res.status(401).json({ success: false, message: 'Invalid email or password' });
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        return res.status(500).json({ success: false, message: 'An error occurred during login.' });
+    }
+};
+
+// Route for user registration
 const registerUser = async (req, res) => {
-
     try {
         const { name, email, password } = req.body;
 
-        //checking user already exists or not
-
-        const exists = await userModel.findOne({ email });
-        if (exists) {
-            return res.json({ success: false, message: "User already exists" })
+        if (!name || !email || !password) {
+            return res.status(400).json({ success: false, message: "All fields are required" });
         }
 
-        // validating email format & strong password
+        const trimmedName = name.trim();
+        if (trimmedName.length < 2) {
+            return res.status(400).json({ success: false, message: "Name must be at least 2 characters long" });
+        }
+
         if (!validator.isEmail(email)) {
-            return res.json({ success: false, message: "Please enter a valid Email" })
-
+            return res.status(400).json({ success: false, message: "Please enter a valid email address" });
         }
+
+        const normalizedEmail = validator.normalizeEmail(email);
+
+        const exists = await userModel.findOne({ email: normalizedEmail });
+        if (exists) {
+            return res.status(409).json({ success: false, message: "User already exists with this email" });
+        }
+
         if (password.length < 8) {
-            return res.json({ success: false, message: "Please enter a strong password" })
-
+            return res.status(400).json({ success: false, message: "Password must be at least 8 characters long" });
         }
 
-        //hashing password before saving to database
-
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(password, salt)
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
         const newUser = new userModel({
-            name,
-            email,
-            password: hashedPassword
-        })
+            name: trimmedName,
+            email: normalizedEmail,
+            password: hashedPassword,
+            cartData: {}
+        });
 
-        const user = await newUser.save()
+        const user = await newUser.save();
+        const token = createToken(user._id);
 
-        const token = createToken(user._id)
-        res.json({ success: true, token })
-
+        return res.status(201).json({ success: true, token });
     } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message })
+        console.error('Register error:', error);
+        return res.status(500).json({ success: false, message: 'An error occurred during registration.' });
     }
+};
 
-}
-
-//Route for admin login
+// Route for admin login
 const adminLogin = async (req, res) => {
-try {
-    const{email,password}=req.body
-    if(email===process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD){
-        const token = jwt.sign(email+password,process.env.JWT_SECRET)
-        res.json({success:true,token})
-    }
-    else{
-        res.json({success:false,message:"Invalid Admin Credentials"})
-} }catch (error) {
-    console.log(error);
-    res.json({success:false,message:error.message}) 
-}
-}
+    try {
+        const { email, password } = req.body;
 
-export { loginUser, registerUser, adminLogin }; 
+        if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+            const token = jwt.sign(
+                { role: 'admin', email: process.env.ADMIN_EMAIL },
+                process.env.JWT_SECRET,
+                { expiresIn: '24h' }
+            );
+            return res.json({ success: true, token });
+        } else {
+            return res.status(401).json({ success: false, message: "Invalid Admin Credentials" });
+        }
+    } catch (error) {
+        console.error('Admin login error:', error);
+        return res.status(500).json({ success: false, message: 'An error occurred during admin login.' });
+    }
+};
+
+export { loginUser, registerUser, adminLogin };
