@@ -121,29 +121,33 @@ const getProductsData = async ()=>{
 }
 
 
-const getUserCart = async(token)=>{
+const getUserCart = async (userToken) => {
   try {
-    const response = await axios.post(backendUrl+'/api/cart/get',{},{headers:{token}})
-    if (response.data.success){
-      setCartItems(response.data.cartData)
+    const response = await axios.post(backendUrl + '/api/cart/get', {}, { headers: { token: userToken } });
+    if (response.data.success) {
+      setCartItems(response.data.cartData || {});
     }
   } catch (error) {
-    console.log(error)
-    toast.error(error.message)
+    console.log(error);
+    if (error.response?.status === 401 || error.response?.status === 404) {
+      localStorage.removeItem('token');
+      setToken('');
+      setCartItems({});
+    }
   }
-}
+};
 
+useEffect(() => {
+  getProductsData();
+}, []);
 
-useEffect(()=>{
-getProductsData();
-},[])
-
-useEffect(()=>{
-  if(!token && localStorage.getItem('token')){
-setToken(localStorage.getItem('token'))
-getUserCart(localStorage.getItem('token'))
+useEffect(() => {
+  if (!token && localStorage.getItem('token')) {
+    const savedToken = localStorage.getItem('token');
+    setToken(savedToken);
+    getUserCart(savedToken);
   }
-},[])
+}, []);
 
 
 
