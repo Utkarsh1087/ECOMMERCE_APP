@@ -1,2 +1,45 @@
-node_modules
- *.env
+# Dependencies
+node_modules/
+*/node_modules/
+*/*/node_modules/
+
+# Environment files
+.env
+.env.*
+*.env
+*/.env
+*/.env.*
+*/*/.env
+*/*/.env.*
+!.env.example
+!*/.env.example
+!*/*/.env.example
+
+# Build outputs
+dist/
+dist-ssr/
+*/dist/
+*/*/dist/
+build/
+*/build/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# OS & IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
