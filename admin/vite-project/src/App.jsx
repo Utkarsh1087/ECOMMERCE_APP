@@ -12,7 +12,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
-export const backendUrl = import.meta.env.VITE_BACKEND_URL;
+const rawUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+export const backendUrl = rawUrl.replace(/\/api\/?$/, '').replace(/\/+$/, '');
 export const currency= '$';
 
 const App = () => {

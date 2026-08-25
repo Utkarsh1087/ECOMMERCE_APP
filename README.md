@@ -169,7 +169,7 @@ VITE_RAZORPAY_KEY_ID="rzp_test_your_razorpay_key_id"
 Copy `admin/vite-project/.env.example` to `admin/vite-project/.env`:
 
 ```env
-VITE_BACKEND_URL="http://localhost:4000/api"
+VITE_BACKEND_URL="http://localhost:4000"
 ```
 
 ---
